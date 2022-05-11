@@ -42,9 +42,27 @@ def registerNewUser(obj, login, password):
 @click.pass_obj
 def login(obj, login, password):
     user = users_service.login(obj['db'], login, password)
-    print(user)
+    print("Logged as")
+    print(user.login)
     return user
 
+
+@user_command.command("list")
+@click.pass_obj
+@click.option("--filter", required=False)
+def listAllUsers(obj, filter):
+    for user in users_service.getAllUsers(obj['db']):
+        if filter is None:
+            print(user.login)
+        elif user.login.find(filter) > -1:
+            print(user.login)
+
+
+@user_command.command("delete")
+@click.pass_obj
+@click.option("--login", required=True, prompt=True)
+def remove_command(obj, login):
+    users_service.deleteUser(obj['db'], login)
 
 
 if __name__ == '__main__':

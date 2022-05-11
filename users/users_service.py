@@ -34,9 +34,14 @@ def login(db: Cursor, login: str, password: str):
     return User(id=user[0], login=user[1])
 
 
-def getAllUsers(db: Cursor) -> List[User]:
-    return [User(id=user[0], login=user[1]) for user in db.execute("SELECT * FROM users")]
+def getAllUsers(db: Cursor):
+    conn = sqlite3.connect("users.db")
+    cur = conn.cursor()
+    return [User(id=user[0], login=user[1]) for user in conn.execute("SELECT * FROM users")]
 
 
 def deleteUser(db: Cursor, login):
-    db.execute("DELETE FROM users WHERE login = ?", (login,))
+    conn = sqlite3.connect("users.db")
+    cur = conn.cursor()
+    conn.execute("DELETE FROM users WHERE login = ?", (login,))
+    conn.commit()
