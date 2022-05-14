@@ -1,7 +1,6 @@
 import sqlite3
 from sqlite3 import Cursor
 from typing import List
-
 import bcrypt
 
 from database.database import Database
