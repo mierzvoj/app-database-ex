@@ -4,21 +4,14 @@ from sqlite3 import Cursor
 
 
 class Database:
+
     def __int__(self):
         connectToDb()
-        self.db = mdb.connect("users.db")
-        self.cursor = self.db.cursor()
 
-    def __enter__(self):
-        self.connection = sqlite3.connect(self.db)
-        self.cursor = self.connection.cursor()
-        return self.connection, self.cursor
-
-    def __exit__(self):
-        pass
 
 def connectToDb() -> sqlite3.Connection:
     db = mdb.connect("users.db")
+    cursor = db.cursor()
     db.execute("pragma foreign_keys")
     createTableUsersRooms(db)
     createTableTasks(db)

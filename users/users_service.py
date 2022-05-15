@@ -6,6 +6,8 @@ import bcrypt
 from database.database import Database
 from users.user_model import User
 
+db = Database()
+
 
 def insertIntoUsers(db: Cursor, login: str, password: str):
     salt = bcrypt.gensalt()

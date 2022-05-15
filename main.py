@@ -1,37 +1,30 @@
-import sqlite3
-import sys
-from sqlite3 import Cursor
-import os
 import click as click
-
-from database import database
 from database.database import Database
 from rooms import rooms_service
 from users import users_service
 from users.user_model import User
-from rooms.rooms_service import Room
 
-db = Database
+db = Database()
 
 
-@click.pass_context
+
+
 def user(obj, login, password):
-    print(obj)
-    with obj:
-        cursor = obj['db'].cursor()
-        user = users_service.login(cursor, login, password)
-        if user is None:
-            print("Wrong credentials!")
-            exit(1)
-        obj['user'] = user
-        obj['db'] = db
+    cursor = obj['db'].cursor()
+    user = users_service.login(cursor, login, password)
+    if user is None:
+        print("Wrong credentials!")
+        exit(1)
+    obj['user'] = user
+    obj['db'] = db
 
 
 @click.group()
 @click.pass_context
 def run_command(ctx):
     ctx.obj = {
-        'db': db
+        'db': db,
+        'user': user
     }
 
 
