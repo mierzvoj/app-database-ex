@@ -1,44 +1,18 @@
 import sqlite3
-import sqlite3 as mdb
+import sqlite3
 from sqlite3 import Cursor
 
 
-class Database:
-
+class Database(object):
     def __int__(self):
-        connectToDb()
+        return self
 
+    connection = sqlite3.connect("users.db", timeout=10)
+    connection.execute("PRAGMA foreign_keys = ON;")
+    cursor = connection.cursor()
+    connection.isolation_level = ''
+    print("database connected")
 
-def connectToDb() -> sqlite3.Connection:
-    db = mdb.connect("users.db")
-    cursor = db.cursor()
-    db.execute("pragma foreign_keys")
-    createTableUsersRooms(db)
-    createTableTasks(db)
-    createTableUsers(db)
-    createTablePoll(db)
-    createTableUsersRooms(db)
-    print("tables created")
-    return db
-
-
-def chk_conn(self):
-    try:
-        self.cursor()
-        return True
-    except Exception as ex:
-        return False
-
-
-myconn = mdb.connect("users.db")
-if chk_conn(myconn):
-    print("Database connected")
-else:
-    print("Database connection failed")
-
-
-def createTableUsers(db: mdb.Connection):
-    cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             user_id integer PRIMARY KEY,
@@ -47,9 +21,6 @@ def createTableUsers(db: mdb.Connection):
             )
         ''')
 
-
-def createTableRooms(db: mdb.Connection):
-    cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS rooms (
             room_id integer PRIMARY KEY,
@@ -60,8 +31,6 @@ def createTableRooms(db: mdb.Connection):
         ''')
 
 
-def createTableUsersRooms(db: mdb.Connection):
-    cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users_rooms (
             id integer PRIMARY KEY,
@@ -74,8 +43,6 @@ def createTableUsersRooms(db: mdb.Connection):
         ''')
 
 
-def createTablePoll(db: mdb.Connection):
-    cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS poll (
             id integer PRIMARY KEY,
@@ -89,8 +56,6 @@ def createTablePoll(db: mdb.Connection):
                 ''')
 
 
-def createTableTasks(db: mdb.Connection):
-    cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
             id integer PRIMARY KEY,
