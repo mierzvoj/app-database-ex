@@ -15,7 +15,7 @@ class Database(object):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-            user_id integer PRIMARY KEY,
+            id integer PRIMARY KEY,
             login text NOT NULL UNIQUE,
             password text NOT NULL
             )
@@ -23,13 +23,12 @@ class Database(object):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS rooms (
-            room_id integer PRIMARY KEY,
+            id integer PRIMARY KEY,
             password text NOT NULL,
             owner_id integer NOT NULL,
             FOREIGN KEY (owner_id) REFERENCES users (id)
             )
         ''')
-
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users_rooms (
@@ -42,7 +41,6 @@ class Database(object):
            ) 
         ''')
 
-
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS poll (
             id integer PRIMARY KEY,
@@ -54,7 +52,6 @@ class Database(object):
             FOREIGN KEY (user_id) REFERENCES users (id)
                     ) 
                 ''')
-
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS tasks (

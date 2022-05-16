@@ -5,16 +5,14 @@ import bcrypt
 
 from database.database import Database
 from rooms.room_model import Room
-
+connection = sqlite3.connect("users.db", timeout=10)
 
 def insertIntoRooms(db: Cursor, owner_id: str, password: str):
     salt = bcrypt.gensalt()
     password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-    # conn = sqlite3.connect("users.db")
-    # cur = conn.cursor()
-    db.execute(f'INSERT OR IGNORE INTO rooms(room_id, owner_id, password) VALUES(\"{owner_id}\", \"{password}\")')
-    # conn.commit()
-    # conn.close()
+    db.execute(f'INSERT OR IGNORE INTO rooms(owner_id, password) VALUES(\"{owner_id}\", \"{password}\")')
+    connection.commit()
+    connection.close()
 
 
 def findRoomById(db: Cursor, room_id: int):

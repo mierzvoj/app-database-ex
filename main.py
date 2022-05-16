@@ -10,7 +10,7 @@ db = Database()
 
 
 def user(obj, login, password):
-    cursor = obj['db'].cursor()
+    cursor = obj['db'].cursor
     user = users_service.login(cursor, login, password)
     if user is None:
         print("Wrong credentials!")
@@ -86,7 +86,7 @@ def rooms_command(obj, login, password):
 @click.password_option("--room-password", confirmation_prompt=True)
 @click.pass_obj
 def create_command(obj, room_password):
-    rooms_service.insertIntoRooms(obj['db'].cursor(), obj['user'].id, room_password)
+    rooms_service.insertIntoRooms(obj['db'].cursor, obj['user'].id, room_password)
 
 
 if __name__ == '__main__':
