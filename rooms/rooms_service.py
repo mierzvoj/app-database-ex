@@ -10,7 +10,7 @@ connection = sqlite3.connect("users.db", timeout=10)
 def insertIntoRooms(db: Cursor, owner_id: str, password: str):
     salt = bcrypt.gensalt()
     password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-    db.execute(f'INSERT OR IGNORE INTO rooms(owner_id, password) VALUES(\"{owner_id}\", \"{password}\")')
+    connection.execute(f'INSERT OR IGNORE INTO rooms(password, owner_id) VALUES(\"{password}\", \"{owner_id}\")')
     connection.commit()
     connection.close()
     print("Room added successfully")
