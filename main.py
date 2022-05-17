@@ -100,13 +100,13 @@ def create_command(obj, room_password):
 @click.pass_obj
 def deleteRoom(obj, room_id):
     cursor = obj['db'].cursor
-    room = rooms_service.findRoomById(cursor, id)
-    if room is None:
-        print("Wrong room id!")
-        exit(1)
-    if room.owner_id != obj['user'].id:
-        print("Wrong room id!")
-        exit(1)
+    # room = rooms_service.findRoomById(cursor, id)
+    # if room is None:
+    #     print("Wrong room id!")
+    #     exit(1)
+    # if room.owner_id != obj['user'].id:
+    #     print("Wrong room id!")
+    #     exit(1)
     rooms_service.deleteRoomById(cursor, id)
 
 

@@ -25,7 +25,7 @@ def findRoomById(db: Cursor, id: int):
 
 
 def deleteRoomById(db: Cursor, id: int):
-    connection.execute("DELETE FROM joined_rooms WHERE id=?", (id,))
+    # connection.execute("DELETE FROM joined_rooms WHERE id=?", (id,))
     connection.execute("DELETE FROM rooms WHERE id=?", (id,))
     connection.commit()
     connection.close()
