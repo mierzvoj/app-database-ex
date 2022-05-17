@@ -13,6 +13,7 @@ def insertIntoRooms(db: Cursor, owner_id: str, password: str):
     db.execute(f'INSERT OR IGNORE INTO rooms(owner_id, password) VALUES(\"{owner_id}\", \"{password}\")')
     connection.commit()
     connection.close()
+    print("Room added successfully")
 
 
 def findRoomById(db: Cursor, room_id: int):

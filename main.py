@@ -7,8 +7,6 @@ from users.user_model import User
 db = Database()
 
 
-
-
 def user(obj, login, password):
     cursor = obj['db'].cursor
     user = users_service.login(cursor, login, password)
@@ -56,7 +54,15 @@ def login(obj, login, password):
     obj['db'] = db
 
 
-@user_command.command("list")
+@user_command.group("login")
+@click.option("--login", required=True, prompt=True)
+@click.password_option(confirmation_prompt=False)
+@click.pass_obj
+def login_command(obj, login, password):
+    user(obj, login, password)
+
+
+@login_command.command("list")
 @click.pass_obj
 @click.option("--filter", required=False)
 def listAllUsers(obj, filter):
