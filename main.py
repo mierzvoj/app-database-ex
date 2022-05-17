@@ -95,5 +95,20 @@ def create_command(obj, room_password):
     rooms_service.insertIntoRooms(obj['db'].cursor, obj['user'].id, room_password)
 
 
+@rooms_command.command("delete")
+@click.option("--room-id", required=True, prompt=True, type=click.types.INT)
+@click.pass_obj
+def deleteRoom(obj, room_id):
+    cursor = obj['db'].cursor
+    room = rooms_service.findRoomById(cursor, id)
+    if room is None:
+        print("Wrong room id!")
+        exit(1)
+    if room.owner_id != obj['user'].id:
+        print("Wrong room id!")
+        exit(1)
+    rooms_service.deleteRoomById(cursor, id)
+
+
 if __name__ == '__main__':
     run_command()
