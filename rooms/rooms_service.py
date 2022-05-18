@@ -18,15 +18,14 @@ def insertIntoRooms(db: Cursor, owner_id: str, password: str):
     print("Room added successfully")
 
 
-def findRoomById(db: Cursor, id: int):
+def findRoomById(db: Cursor, id):
     room = connection.execute('''SELECT * FROM rooms WHERE id = ?''', (id,)).fetchone()
-    return Room(id=room[0], password=room[1], owner_id=room[2])
+    return Room(room_id=room[0], password=room[1], owner_id=room[2])
 
 
-
-def deleteRoomById(db: Cursor, id: int):
+def deleteRoomById(db: Cursor, id):
     # connection.execute("DELETE FROM joined_rooms WHERE id=?", (id,))
-    connection.execute("DELETE FROM rooms WHERE id=?", (id,))
+    connection.execute('''DELETE FROM rooms WHERE id = ?''', (id,))
     connection.commit()
     connection.close()
 
@@ -35,9 +34,23 @@ def joinRoom(db: Cursor, user_id: int, room_id: int, password: str) -> bool:
     room = findRoomById(db, room_id)
     if room is None:
         return False
-
     if not bcrypt.checkpw(password.encode('utf-8'), room.password.encode('utf-8')):
         return False
-
-    connection.execute("INSERT INTO joined_rooms (user_id, room_id) VALUES (?, ?)", (user_id, room_id))
+    connection.execute("INSERT INTO users_rooms (user_id, room_id) VALUES (?, ?)", (user_id, room_id))
+    connection.commit()
+    connection.close()
+    print('Joined succesfully')
     return True
+
+
+def createTopic(db: Cursor, room_id: int, topic: str):
+    connection.execute("INSERT INTO topics (room_id, subject) VALUES (?, ?)", (room_id, topic))
+    connection.commit()
+    connection.close()
+    print('Topic created succesfully')
+
+
+def addVote(db: Cursor, topic_id: int, vote: float, user_id: int):
+    connection.execute("INSERT INTO votes (topic_id, vote, user_id) VALUES (?, ?, ?)", (topic_id, vote, user_id))
+    connection.commit()
+    connection.close()

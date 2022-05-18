@@ -110,5 +110,51 @@ def deleteRoom(obj, room_id):
     rooms_service.deleteRoomById(cursor, id)
 
 
+@rooms_command.command("join")
+@click.option("--room-id", required=True, prompt=True, type=click.types.INT)
+@click.password_option("--room-password", confirmation_prompt=False)
+@click.pass_obj
+def joinRoomCommand(obj, room_id, room_password):
+    if not rooms_service.joinRoom(obj['db'].cursor, obj['user'].id, room_id, room_password):
+        print("Wrong room id or passowrd!")
+        exit(1)
+
+
+@rooms_command.command("set-topic")
+@click.option("--room-id", required=True, prompt=True, type=click.types.INT)
+@click.option("--new-topic", required=True, prompt=True)
+@click.pass_obj
+def setTopicCommand(obj, room_id, new_topic):
+    cursor = obj['db'].cursor
+    room = rooms_service.findRoomById(cursor, room_id)
+    if room is None:
+        print("Unknown room!")
+        exit(1)
+    if room.owner_id != obj['user'].id:
+        print("Unknown room!")
+        exit(1)
+    # topic = rooms_service.get_topic(cursor, room_id)
+    # if topic is not None:
+    rooms_service.createTopic(cursor, room_id, new_topic)
+
+
+@rooms_command.command("vote")
+@click.option("--topic-id", required=True, prompt=True, type=click.types.INT)
+@click.option("--value", required=True, prompt=True, type=click.types.FLOAT)
+@click.pass_obj
+def vote_command(obj, topic_id, value):
+    cursor = obj['db'].cursor
+    # topic = rooms_service.get_topic_by_id(cursor, topic_id)
+    # if topic is None:
+    #     print("Wrong topic!")
+    #     exit(1)
+    #
+    # if not rooms_service.joined_room(cursor, obj['user'].id, topic.room_id):
+    #     print("Wrong topic!")
+    #     exit(1)
+
+    rooms_service.addVote(cursor, topic_id, value, obj['user'].id)
+
+
 if __name__ == '__main__':
     run_command()

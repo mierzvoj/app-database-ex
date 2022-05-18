@@ -42,19 +42,19 @@ class Database(object):
         ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS poll (
+        CREATE TABLE IF NOT EXISTS votes (
             id integer PRIMARY KEY,
-            subject_id integer NOT NULL,
-            task_id integer NOT NULL,
+            topic_id integer NOT NULL,
             user_id integer NOT NULL,
             vote float NOT NULL,
-            FOREIGN KEY (task_id) REFERENCES tasks (id),
-            FOREIGN KEY (user_id) REFERENCES users (id)
+            FOREIGN KEY (topic_id ) REFERENCES topics (id),
+            FOREIGN KEY (user_id) REFERENCES users (id),
+            UNIQUE (user_id, topic_id)
                     ) 
                 ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tasks (
+        CREATE TABLE IF NOT EXISTS topics (
             id integer PRIMARY KEY,
             room_id integer NOT NULL,
             subject text NOT NULL,
