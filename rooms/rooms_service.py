@@ -1,10 +1,11 @@
 import sqlite3
 from sqlite3 import Cursor
-from typing import List
+from typing import List, Union
 import bcrypt
 
 from database.database import Database
 from rooms.room_model import Room
+from rooms.topics_model import Topic
 
 connection = sqlite3.connect("users.db", timeout=10)
 
@@ -26,6 +27,7 @@ def findRoomById(db: Cursor, id):
 def deleteRoomById(db: Cursor, id):
     # connection.execute("DELETE FROM joined_rooms WHERE id=?", (id,))
     connection.execute('''DELETE FROM rooms WHERE id = ?''', (id,))
+    connection.execute('''DELETE FROM users_rooms WHERE id = ?''', (id,))
     connection.commit()
     connection.close()
 
@@ -54,3 +56,30 @@ def addVote(db: Cursor, topic_id: int, vote: float, user_id: int):
     connection.execute("INSERT INTO votes (topic_id, vote, user_id) VALUES (?, ?, ?)", (topic_id, vote, user_id))
     connection.commit()
     connection.close()
+
+
+def getTopic(db: Cursor, room_id: int) -> Union[Topic, None]:
+    topic = db.execute("SELECT * FROM topics WHERE room_id = ?", (room_id, )).fetchone()
+    if topic is None:
+        return None
+
+    return Topic(id=topic[0], room_id=topic[1], subject=topic[2])
+
+
+def getTopicById(db: Cursor, topic_id: int) -> Union[Topic, None]:
+    topic = db.execute("SELECT * FROM topics WHERE id = ?", (topic_id,)).fetchone()
+    if topic is None:
+        return None
+    return Topic(id=topic[0], room_id=topic[1], subject=topic[2])
+
+
+def joinedRoom(db: Cursor, user_id: int, room_id: int) -> bool:
+    return len(connection.execute("SELECT * FROM joined_rooms WHERE room_id = ? AND user_id = ?", (room_id, user_id)).fetchall()) > 0
+
+
+def deleteTopic(db: Cursor, room_id: int):
+    db.execute("DELETE FROM topics WHERE room_id = ?", (room_id, ))
+
+
+def deleteVotes(db: Cursor, topic_id: int):
+        db.execute("DELETE FROM votes WHERE topic_id=?", (topic_id,))

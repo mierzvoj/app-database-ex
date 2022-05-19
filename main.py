@@ -100,13 +100,13 @@ def create_command(obj, room_password):
 @click.pass_obj
 def deleteRoom(obj, room_id):
     cursor = obj['db'].cursor
-    # room = rooms_service.findRoomById(cursor, id)
-    # if room is None:
-    #     print("Wrong room id!")
-    #     exit(1)
-    # if room.owner_id != obj['user'].id:
-    #     print("Wrong room id!")
-    #     exit(1)
+    room = rooms_service.findRoomById(cursor, id)
+    if room is None:
+        print("Wrong room id!")
+        exit(1)
+    if room.owner_id != obj['user'].id:
+        print("Wrong room id!")
+        exit(1)
     rooms_service.deleteRoomById(cursor, id)
 
 
@@ -131,10 +131,9 @@ def setTopicCommand(obj, room_id, new_topic):
         print("Unknown room!")
         exit(1)
     if room.owner_id != obj['user'].id:
-        print("Unknown room!")
+        print("Wrong room No.!")
         exit(1)
-    # topic = rooms_service.get_topic(cursor, room_id)
-    # if topic is not None:
+    topic = rooms_service.getTopic(cursor, room_id)
     rooms_service.createTopic(cursor, room_id, new_topic)
 
 
@@ -144,15 +143,14 @@ def setTopicCommand(obj, room_id, new_topic):
 @click.pass_obj
 def vote_command(obj, topic_id, value):
     cursor = obj['db'].cursor
-    # topic = rooms_service.get_topic_by_id(cursor, topic_id)
-    # if topic is None:
-    #     print("Wrong topic!")
-    #     exit(1)
-    #
-    # if not rooms_service.joined_room(cursor, obj['user'].id, topic.room_id):
-    #     print("Wrong topic!")
-    #     exit(1)
+    topic = rooms_service.getTopicById(cursor, topic_id)
+    if topic is None:
+        print("Wrong topic!")
+        exit(1)
 
+    if not rooms_service.joinedRoom(cursor, obj['user'].id, topic.room_id):
+        print("Wrong topic!")
+        exit(1)
     rooms_service.addVote(cursor, topic_id, value, obj['user'].id)
 
 

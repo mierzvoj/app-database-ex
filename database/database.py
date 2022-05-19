@@ -36,8 +36,7 @@ class Database(object):
             room_id integer NOT NULL,
             user_id integer NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id),
-            FOREIGN KEY (room_id) REFERENCES rooms (id),
-            UNIQUE(room_id, user_id)
+            FOREIGN KEY (room_id) REFERENCES rooms (id)
            ) 
         ''')
 
